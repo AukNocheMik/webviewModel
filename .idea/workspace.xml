@@ -2,22 +2,6 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="7777cd36-5020-4564-9895-997d9b539077" name="Default" comment="">
-      <change beforePath="" afterPath="$PROJECT_DIR$/libs/GLTFLoader.js" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/models/gltf/DamagedHelmet/README.md" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/models/gltf/DamagedHelmet/glTF/DamagedHelmet.bin" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/models/gltf/DamagedHelmet/glTF/DamagedHelmet.gltf" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/models/gltf/DamagedHelmet/glTF/Default_AO.jpg" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/models/gltf/DamagedHelmet/glTF/Default_albedo.jpg" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/models/gltf/DamagedHelmet/glTF/Default_emissive.jpg" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/models/gltf/DamagedHelmet/glTF/Default_metalRoughness.jpg" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/models/gltf/DamagedHelmet/glTF/Default_normal.jpg" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/models/stl/ascii/pr2_head_pan.stl" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/models/stl/ascii/pr2_head_tilt.stl" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/models/stl/ascii/slotted_disk.stl" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/models/stl/binary/colored.stl" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/models/stl/binary/pr2_head_pan.stl" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/models/stl/binary/pr2_head_tilt.stl" />
-      <change beforePath="$PROJECT_DIR$/WebViewModel.js" afterPath="$PROJECT_DIR$/WebViewModel.js" />
       <change beforePath="$PROJECT_DIR$/index.html" afterPath="$PROJECT_DIR$/index.html" />
     </list>
     <ignored path="$PROJECT_DIR$/.tmp/" />
@@ -32,21 +16,21 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="index.html" pinned="false" current-in-tab="false">
+      <file leaf-file-name="index.html" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/index.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="59">
-              <caret line="7" column="19" lean-forward="true" selection-start-line="7" selection-start-column="19" selection-end-line="7" selection-end-column="19" />
+            <state relative-caret-position="247">
+              <caret line="30" column="20" lean-forward="true" selection-start-line="30" selection-start-column="20" selection-end-line="30" selection-end-column="20" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="WebViewModel.js" pinned="false" current-in-tab="true">
+      <file leaf-file-name="WebViewModel.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/WebViewModel.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="90">
-              <caret line="6" column="68" lean-forward="true" selection-start-line="6" selection-start-column="68" selection-end-line="6" selection-end-column="68" />
+            <state relative-caret-position="-1639">
+              <caret line="6" column="68" lean-forward="true" selection-start-line="0" selection-start-column="0" selection-end-line="248" selection-end-column="5" />
               <folding />
             </state>
           </provider>
@@ -72,9 +56,9 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/index.html" />
         <option value="$PROJECT_DIR$/models/stl.html" />
         <option value="$PROJECT_DIR$/WebViewModel.js" />
+        <option value="$PROJECT_DIR$/index.html" />
       </list>
     </option>
   </component>
@@ -205,12 +189,12 @@
       <option name="presentableId" value="Default" />
       <updated>1545463333029</updated>
       <workItem from="1545463334352" duration="54000" />
-      <workItem from="1545490359661" duration="2897000" />
+      <workItem from="1545490359661" duration="3135000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="2951000" />
+    <option name="totallyTimeSpent" value="3189000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="23" width="1440" height="823" extended-state="0" />
@@ -270,14 +254,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/index.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="59">
-          <caret line="7" column="19" lean-forward="true" selection-start-line="7" selection-start-column="19" selection-end-line="7" selection-end-column="19" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/models/stl.html">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="60">
@@ -296,8 +272,16 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/WebViewModel.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="90">
-          <caret line="6" column="68" lean-forward="true" selection-start-line="6" selection-start-column="68" selection-end-line="6" selection-end-column="68" />
+        <state relative-caret-position="-1639">
+          <caret line="6" column="68" lean-forward="true" selection-start-line="0" selection-start-column="0" selection-end-line="248" selection-end-column="5" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/index.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="247">
+          <caret line="30" column="20" lean-forward="true" selection-start-line="30" selection-start-column="20" selection-end-line="30" selection-end-column="20" />
           <folding />
         </state>
       </provider>
