@@ -4,7 +4,8 @@
     var modelShow;
     var bounding = {x:0,y:0,z:0,radius:0}
     var initPosition = false;
-    var model_url = 'models/json/teapot-claraio.json';
+    var model_url = 'models/stl/ascii/pr2_head_pan.stl';     // 模型路径
+    var model_mrl_url = 'models/obj/male02/male02.mtl'; //当模型为obj 时，传入后缀为stl的材质文件路径
     var resetDate = {position:new THREE.Vector3(0,0,0),rotation:new THREE.Vector3(0,0,0),}
     function initRender() {                 //渲染方式
         renderer = new THREE.WebGLRenderer({
@@ -15,7 +16,7 @@
         renderer.shadowMap.enabled = true;
         renderer.setSize(window.innerWidth,window.innerHeight);
         renderer.shadowMap.type = THREE.PCFSoftShadowMap;
-        renderer.setClearColor(0xB9D3EE);           //场景渲染颜色  ffffff 为白色，可以调低 dddddd 为浅灰色
+        renderer.setClearColor(0xd7d7d7);           //场景渲染颜色  ffffff 为白色，可以调低 dddddd 为浅灰色
         document.getElementById("container").appendChild(renderer.domElement);
 
     }
@@ -28,6 +29,13 @@
     var scene;
     function initScene() {
      scene = new THREE.Scene();
+        scene.background = new THREE.Color(0xd7d7d7);
+        scene.fog = new THREE.Fog(0xd7d7d7,200,1000);
+        var grid = new THREE.GridHelper( 200, 40, 0x000000, 0x000000 );
+        grid.position.y = -20;
+        grid.material.opacity = 0.2;
+        grid.material.transparent = true;
+        scene.add( grid );
 
      }
      document.addEventListener("dblclick",function (ev) {
@@ -84,13 +92,12 @@
                             }
 
                         } );
-                        object.position.y = -50;
                         modelShow = object;
                         scene.add( object );
                         initPosition  = true;
 
                     } );
-        }else if(model_url.indexOf('obj')>0){
+        }else if(model_url.indexOf('.obj')>0){
 
            // ======  objloader======
             var onProgress = function ( xhr ) {
@@ -108,14 +115,11 @@
 
             THREE.Loader.Handlers.add( /\.dds$/i, new THREE.DDSLoader() );
 
-            var loader = new THREE.MTLLoader();
-            loader.load( 'models/obj/male02/male02.mtl', function ( materials ) {
-                loader.setPath('models/obj/male02/')
+            var loader = new THREE.MTLLoader().load( model_mrl_url, function ( materials ) {
                     materials.preload();
-
                     new THREE.OBJLoader()
                         .setMaterials( materials )
-                        .load( 'models/obj/male02/male02.obj', function ( object ) {
+                        .load( model_url, function ( object ) {
                             modelShow = object;
                             initPosition = true;
                             scene.add( object );
@@ -124,7 +128,7 @@
 
 
                 } );
-        }else {
+        }else if(model_url.indexOf('.json')>0){
             // json loader
             var objectLoader = new THREE.ObjectLoader();
             objectLoader.load( model_url, function ( obj ) {
@@ -133,6 +137,36 @@
                 initPosition = true;
                 scene.add( obj );
             } );
+        }else if(model_url.indexOf('.gltf')>0) {
+            var loader = new THREE.GLTFLoader().load( model_url, function ( gltf ) {
+                gltf.scene.traverse( function ( child ) {
+                    if(child.isMesh){
+                        if(mesh.geometry.boundingSphere<1 ){
+                            mesh.scale.set(100,100,100);
+                        }else if(mesh.geometry.boundingSphere<10 ){
+                            mesh.scale.set(20,20,20);
+                        }
+                    }
+                } );
+                scene.add( gltf.scene );
+            }, undefined, function ( e ) {
+                console.error( e );
+            } );
+        } else if(model_url.indexOf('.stl')>0){
+            var loader = new THREE.STLLoader();
+            loader.load( model_url, function ( geometry ) {
+                var material = new THREE.MeshPhongMaterial( { color: 0xff5533, specular: 0x111111, shininess: 200 } );
+                var mesh = new THREE.Mesh( geometry, material );
+                if(mesh.geometry.boundingSphere<1 ){
+                    mesh.scale.set(100,100,100);
+                }else if(mesh.geometry.boundingSphere<10 ){
+                    mesh.scale.set(20,20,20);
+                }
+                mesh.castShadow = true;
+                mesh.receiveShadow = true;
+                scene.add( mesh );
+            } );
+
         }
     }
 
