@@ -17,7 +17,7 @@
             renderer.shadowMap.enabled = true;
             renderer.setSize(window.innerWidth, window.innerHeight);
             renderer.shadowMap.type = THREE.PCFSoftShadowMap;
-            renderer.setClearColor(0xd7d7d7);           //场景渲染颜色  ffffff 为白色，可以调低 dddddd 为浅灰色
+            renderer.setClearColor(0xd7d7d7);
             document.getElementById("container").appendChild(renderer.domElement);
 
         }

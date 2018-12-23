@@ -22,12 +22,6 @@
     </style>
 </head>
 <body onload="draw()">
-<!--模型格式传入，需要对应的加载器-->
-<!--<select id="mySelect" onchange="gradeChange()">-->
-    <!--<option value="models/fbx/Samba Dancing.fbx">FBX 模型</option>-->
-    <!--<option value="models/obj/male02/male02.mtl">OBJ 模型</option>-->
-    <!--<option value="models/json/teapot-claraio.json">JSON 模型</option>-->
-<!--</select>-->
 <div id="container">
 
 </div>
@@ -49,7 +43,7 @@
         alert('web no support localStorage');
     }else{
         model_url = 'models/stl/ascii/pr2_head_pan.stl';
-        if(model_url.indexOf('.obj')>0){        // 当传入路径为obj 时候，需要填入stl路径
+        if(model_url.indexOf('.obj')>0){
             model_url_stl = '';
         }
         var storage = window.localStorage;
