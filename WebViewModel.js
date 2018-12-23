@@ -1,249 +1,264 @@
 
-    var renderer,light,mixers = [];
-    var clock = new THREE.Clock();
-    var modelShow;
-    var bounding = {x:0,y:0,z:0,radius:0}
-    var initPosition = false;
-    var model_url = 'models/stl/ascii/pr2_head_pan.stl';     // 模型路径
-    var model_mrl_url = 'models/obj/male02/male02.mtl'; //当模型为obj 时，传入后缀为stl的材质文件路径
-    var resetDate = {position:new THREE.Vector3(0,0,0),rotation:new THREE.Vector3(0,0,0),}
-    function initRender() {                 //渲染方式
-        renderer = new THREE.WebGLRenderer({
-            alpha: true,
-            antialias: true
-        });
+        var renderer, light, mixers = [];
+        var clock = new THREE.Clock();
+        var modelShow;
+        var bounding = {x: 0, y: 0, z: 0, radius: 0}
+        var initPosition = false;
+        var model_url     // 模型路径
+        var model_mrl_url; //当模型为obj 时，传入后缀为stl的材质文件路径
+        var resetDate = {position: new THREE.Vector3(0, 0, 0), rotation: new THREE.Vector3(0, 0, 0),}
 
-        renderer.shadowMap.enabled = true;
-        renderer.setSize(window.innerWidth,window.innerHeight);
-        renderer.shadowMap.type = THREE.PCFSoftShadowMap;
-        renderer.setClearColor(0xd7d7d7);           //场景渲染颜色  ffffff 为白色，可以调低 dddddd 为浅灰色
-        document.getElementById("container").appendChild(renderer.domElement);
+        function initRender() {                 //渲染方式
+            renderer = new THREE.WebGLRenderer({
+                alpha: true,
+                antialias: true
+            });
 
-    }
+            renderer.shadowMap.enabled = true;
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+            renderer.setClearColor(0xd7d7d7);           //场景渲染颜色  ffffff 为白色，可以调低 dddddd 为浅灰色
+            document.getElementById("container").appendChild(renderer.domElement);
 
-    var camera;
-    function initCamera() {
-        camera = new THREE.PerspectiveCamera(70, window.innerWidth / window.innerHeight, 0.1, 100000);
-        camera.position.set(0, 0, 100);               //摄像机位置
-    }
-    var scene;
-    function initScene() {
-     scene = new THREE.Scene();
-        scene.background = new THREE.Color(0xd7d7d7);
-        scene.fog = new THREE.Fog(0xd7d7d7,200,1000);
-        var grid = new THREE.GridHelper( 200, 40, 0x000000, 0x000000 );
-        grid.position.y = -20;
-        grid.material.opacity = 0.2;
-        grid.material.transparent = true;
-        scene.add( grid );
+        }
+        function getModelUrl() {
+            var storage = window.localStorage;
+             model_url = storage["url"];     // 模型路径
+             model_mrl_url = storage["stl"]; //当模型为obj 时，传入后缀为stl的材质文件路径
+        }
 
-     }
-     document.addEventListener("dblclick",function (ev) {
-         initPosition = true;
-     })
-    function gradeChange() {            // 获取模型的路径
-        var objS = document.getElementById("mySelect");
-        var grade = objS.options[objS.selectedIndex].value;
-        if(grade == model_url){return;}
-        model_url = grade;          // 模型路径传入
-        console.log(model_url);
-        disposeScene();         // 去掉场景内部的其他模型；
-        initLoader();       // 开始加载模型；
-    }
-    function initLight() {      //灯光渲染
-        light = new THREE.HemisphereLight( 0xffffff, 0x444444 );
-        light.position.set( 0, 200, 0 );
-        scene.add( light );
+        var camera;
+        
+        function initCamera() {
+            camera = new THREE.PerspectiveCamera(70, window.innerWidth / window.innerHeight, 0.1, 100000);
+            camera.position.set(0, 0, 100);               //摄像机位置
+        }
 
-        light = new THREE.DirectionalLight( 0xffffff );
-        light.position.set( 0, 200, 100 );
-        light.castShadow = true;
-        light.shadow.camera.top = 180;
-        light.shadow.camera.bottom = - 100;
-        light.shadow.camera.left = - 120;
-        light.shadow.camera.right = 120;
-        scene.add( light );
-    }
-    function disposeScene() {
-                console.log(scene);
-                scene.remove(scene.children[scene.children.length-1]);
-                console.log(scene);
-    }
-    function initLoader() {
-        // ========   fbx loader
-        console.log(model_url.indexOf('.fbx'));
-        if(model_url.indexOf('.fbx')>0){
+        var scene;
 
-                     var loader = new THREE.FBXLoader();    // 加载fbx 模型
-                    loader.load( model_url, function ( object ) {
+        function initScene() {
+            scene = new THREE.Scene();
+            scene.background = new THREE.Color(0xd7d7d7);
+            scene.fog = new THREE.Fog(0xd7d7d7, 200, 1000);
+            var grid = new THREE.GridHelper(200, 40, 0x000000, 0x000000);
+            grid.position.y = -20;
+            grid.material.opacity = 0.2;
+            grid.material.transparent = true;
+            scene.add(grid);
 
-                        object.mixer = new THREE.AnimationMixer( object );
-                        mixers.push( object.mixer );
+        }
 
-                        var action = object.mixer.clipAction( object.animations[ 0 ] );
-                        action.play();
+        document.addEventListener("dblclick", function (ev) {
+            initPosition = true;
+        })
 
-                        object.traverse( function ( child ) {
+        function gradeChange() {            // 获取模型的路径
+            var objS = document.getElementById("mySelect");
+            var grade = objS.options[objS.selectedIndex].value;
+            if (grade == model_url) {
+                return;
+            }
+            model_url = grade;          // 模型路径传入
+            console.log(model_url);
+            disposeScene();         // 去掉场景内部的其他模型；
+            initLoader();       // 开始加载模型；
+        }
 
-                            if ( child.isMesh ) {
+        function initLight() {      //灯光渲染
+            light = new THREE.HemisphereLight(0xffffff, 0x444444);
+            light.position.set(0, 200, 0);
+            scene.add(light);
 
-                                child.castShadow = true;
-                                child.receiveShadow = true;
-                            }
+            light = new THREE.DirectionalLight(0xffffff);
+            light.position.set(0, 200, 100);
+            light.castShadow = true;
+            light.shadow.camera.top = 180;
+            light.shadow.camera.bottom = -100;
+            light.shadow.camera.left = -120;
+            light.shadow.camera.right = 120;
+            scene.add(light);
+        }
 
-                        } );
-                        modelShow = object;
-                        scene.add( object );
-                        initPosition  = true;
+        function disposeScene() {
+            console.log(scene);
+            scene.remove(scene.children[scene.children.length - 1]);
+            console.log(scene);
+        }
 
-                    } );
-        }else if(model_url.indexOf('.obj')>0){
+        function initLoader() {
+            // ========   fbx loader
+            console.log(model_url.indexOf('.fbx'));
+            if (model_url.indexOf('.fbx') > 0) {
 
-           // ======  objloader======
-            var onProgress = function ( xhr ) {
+                var loader = new THREE.FBXLoader();    // 加载fbx 模型
+                loader.load(model_url, function (object) {
 
-                if ( xhr.lengthComputable ) {
+                    object.mixer = new THREE.AnimationMixer(object);
+                    mixers.push(object.mixer);
 
-                    var percentComplete = xhr.loaded / xhr.total * 100;
-                    console.log( Math.round( percentComplete, 2 ) + '% downloaded' );
+                    var action = object.mixer.clipAction(object.animations[0]);
+                    action.play();
 
-                }
+                    object.traverse(function (child) {
 
-            };
+                        if (child.isMesh) {
 
-            var onError = function () { };
+                            child.castShadow = true;
+                            child.receiveShadow = true;
+                        }
 
-            THREE.Loader.Handlers.add( /\.dds$/i, new THREE.DDSLoader() );
+                    });
+                    modelShow = object;
+                    scene.add(object);
+                    initPosition = true;
 
-            var loader = new THREE.MTLLoader().load( model_mrl_url, function ( materials ) {
+                });
+            } else if (model_url.indexOf('.obj') > 0) {
+
+                // ======  objloader======
+                var onProgress = function (xhr) {
+
+                    if (xhr.lengthComputable) {
+
+                        var percentComplete = xhr.loaded / xhr.total * 100;
+                        console.log(Math.round(percentComplete, 2) + '% downloaded');
+
+                    }
+
+                };
+
+                var onError = function () {
+                };
+
+                THREE.Loader.Handlers.add(/\.dds$/i, new THREE.DDSLoader());
+
+                var loader = new THREE.MTLLoader().load(model_mrl_url, function (materials) {
                     materials.preload();
                     new THREE.OBJLoader()
-                        .setMaterials( materials )
-                        .load( model_url, function ( object ) {
+                        .setMaterials(materials)
+                        .load(model_url, function (object) {
                             modelShow = object;
                             initPosition = true;
-                            scene.add( object );
+                            scene.add(object);
 
-                        }, onProgress, onError );
+                        }, onProgress, onError);
 
 
-                } );
-        }else if(model_url.indexOf('.json')>0){
-            // json loader
-            var objectLoader = new THREE.ObjectLoader();
-            objectLoader.load( model_url, function ( obj ) {
-                console.log(model_url);
-                modelShow = obj;
-                initPosition = true;
-                scene.add( obj );
-            } );
-        }else if(model_url.indexOf('.gltf')>0) {
-            var loader = new THREE.GLTFLoader().load( model_url, function ( gltf ) {
-                gltf.scene.traverse( function ( child ) {
-                    if(child.isMesh){
-                        if(mesh.geometry.boundingSphere<1 ){
-                            mesh.scale.set(100,100,100);
-                        }else if(mesh.geometry.boundingSphere<10 ){
-                            mesh.scale.set(20,20,20);
+                });
+            } else if (model_url.indexOf('.json') > 0) {
+                // json loader
+                var objectLoader = new THREE.ObjectLoader();
+                objectLoader.load(model_url, function (obj) {
+                    console.log(model_url);
+                    modelShow = obj;
+                    initPosition = true;
+                    scene.add(obj);
+                });
+            } else if (model_url.indexOf('.gltf') > 0) {
+                var loader = new THREE.GLTFLoader().load(model_url, function (gltf) {
+                    gltf.scene.traverse(function (child) {
+                        if (child.isMesh) {
+                            if (mesh.geometry.boundingSphere < 1) {
+                                mesh.scale.set(100, 100, 100);
+                            } else if (mesh.geometry.boundingSphere < 10) {
+                                mesh.scale.set(20, 20, 20);
+                            }
                         }
+                    });
+                    scene.add(gltf.scene);
+                }, undefined, function (e) {
+                    console.error(e);
+                });
+            } else if (model_url.indexOf('.stl') > 0) {
+                var loader = new THREE.STLLoader();
+                loader.load(model_url, function (geometry) {
+                    var material = new THREE.MeshPhongMaterial({color: 0xff5533, specular: 0x111111, shininess: 200});
+                    var mesh = new THREE.Mesh(geometry, material);
+                    if (mesh.geometry.boundingSphere < 1) {
+                        mesh.scale.set(100, 100, 100);
+                    } else if (mesh.geometry.boundingSphere < 10) {
+                        mesh.scale.set(20, 20, 20);
                     }
-                } );
-                scene.add( gltf.scene );
-            }, undefined, function ( e ) {
-                console.error( e );
-            } );
-        } else if(model_url.indexOf('.stl')>0){
-            var loader = new THREE.STLLoader();
-            loader.load( model_url, function ( geometry ) {
-                var material = new THREE.MeshPhongMaterial( { color: 0xff5533, specular: 0x111111, shininess: 200 } );
-                var mesh = new THREE.Mesh( geometry, material );
-                if(mesh.geometry.boundingSphere<1 ){
-                    mesh.scale.set(100,100,100);
-                }else if(mesh.geometry.boundingSphere<10 ){
-                    mesh.scale.set(20,20,20);
-                }
-                mesh.castShadow = true;
-                mesh.receiveShadow = true;
-                scene.add( mesh );
-            } );
-
-        }
-    }
-
-    var controls;
-
-    function initControls() {           //控制脚本
-        controls = new THREE.OrbitControls(camera, renderer.domElement);
-        controls.addEventListener('change', render);
-        controls.enableDamping = true;               //定义可以拖拽
-        controls.dampingFactor = 0.3;
-        controls.enableZoom = true;
-        controls.enablePan = true;
-        controls.rotateSpeed = 0.3;                 //控制旋转速度
-        controls.zoomSpeed = 0.5;                   //缩放速度
-        controls.autoRotateSpeed = 0.6;             //自动旋转速度
-        controls.dampingFactor = 0.6;
-        controls.autoRotate = false;                //控制是否自动旋转
-
-    }
-    // model loader
-
-
-
-    function render() {
-        renderer.render(scene, camera);
-
-    }
-
-    function onWindowResize() {
-        camera.aspect = window.innerWidth / window.innerHeight;
-        camera.updateProjectionMatrix();
-        render();
-        renderer.setSize(window.innerWidth, window.innerHeight);
-        //controls.handleResize();
-    }
-
-    function animate() {
-        render();
-        controls.update();
-
-        if ( mixers.length > 0 ) {
-
-            for ( var i = 0; i < mixers.length; i ++ ) {
-
-                mixers[ i ].update( clock.getDelta() );
+                    mesh.castShadow = true;
+                    mesh.receiveShadow = true;
+                    scene.add(mesh);
+                });
 
             }
+        }
+
+        var controls;
+
+        function initControls() {           //控制脚本
+            controls = new THREE.OrbitControls(camera, renderer.domElement);
+            controls.addEventListener('change', render);
+            controls.enableDamping = true;               //定义可以拖拽
+            controls.dampingFactor = 0.3;
+            controls.enableZoom = true;
+            controls.enablePan = true;
+            controls.rotateSpeed = 0.3;                 //控制旋转速度
+            controls.zoomSpeed = 0.5;                   //缩放速度
+            controls.autoRotateSpeed = 0.6;             //自动旋转速度
+            controls.dampingFactor = 0.6;
+            controls.autoRotate = false;                //控制是否自动旋转
 
         }
-        requestAnimationFrame(animate);
-        if(modelShow && initPosition){
-            console.log(modelShow);
-            modelShow.traverse(function (child) {
-                if(child.type == 'SkinnedMesh'||child.type == 'Mesh'){
-                    camera.position.set(child.geometry.boundingSphere.center.x,child.geometry.boundingSphere.center.y,child.geometry.boundingSphere.center.z + 2*child.geometry.boundingSphere.radius);
-                    resetDate.position = camera.position;
-                    resetDate.rotation = camera.rotation;
-                    console.log(resetDate);
-                    initPosition = false;
-                    return;
+
+        // model loader
+
+
+        function render() {
+            renderer.render(scene, camera);
+
+        }
+
+        function onWindowResize() {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            render();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            //controls.handleResize();
+        }
+
+        function animate() {
+            render();
+            controls.update();
+
+            if (mixers.length > 0) {
+
+                for (var i = 0; i < mixers.length; i++) {
+
+                    mixers[i].update(clock.getDelta());
+
                 }
-            })
 
+            }
+            requestAnimationFrame(animate);
+            if (modelShow && initPosition) {
+                console.log(modelShow);
+                modelShow.traverse(function (child) {
+                    if (child.type == 'SkinnedMesh' || child.type == 'Mesh') {
+                        camera.position.set(child.geometry.boundingSphere.center.x, child.geometry.boundingSphere.center.y, child.geometry.boundingSphere.center.z + 2 * child.geometry.boundingSphere.radius);
+                        resetDate.position = camera.position;
+                        resetDate.rotation = camera.rotation;
+                        console.log(resetDate);
+                        initPosition = false;
+                        return;
+                    }
+                })
+
+            }
         }
-    }
 
 
-
-
-
-    function draw() {       //初始化方法
-        initCamera();
-        initRender();
-        initScene();
-        initLoader();
-        initLight();
-        initControls();
-        animate();
-        window.onresize = onWindowResize;
-    }
+        function draw() {       //初始化方法
+            getModelUrl();
+            initCamera();
+            initRender();
+            initScene();
+            initLoader();
+            initLight();
+            initControls();
+            animate();
+            window.onresize = onWindowResize;
+        }
