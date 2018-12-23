@@ -15,7 +15,7 @@
         }
         #container {
             width: 100%;
-            heigh:100%；
+            height:100%
 
         }
 
@@ -37,7 +37,7 @@
 <!--<script src="js/WebViewModel.js"></script>-->
 <script src="libs/FBXLoader.js"></script>
 <script src="libs/DDSLoader.js"></script>
-<script type=text/javascript>
+<script type="text/javascript">
     var model_url,model_url_stl;
     if(!window.localStorage){
         alert('web no support localStorage');
@@ -48,7 +48,7 @@
         }
         var storage = window.localStorage;
         storage["url"] = model_url;     // 填入模型路径；
-        storage["stl"] = model_url_stl; // 当传入的模型为obj 时候，需要配合stl填入信息；
+        storage["stl"] = model_url_stl; // 当传入的模型为obj 时候，需要配合mtl填入信息；
 
 
     }

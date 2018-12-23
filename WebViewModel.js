@@ -32,6 +32,7 @@
         function initCamera() {
             camera = new THREE.PerspectiveCamera(70, window.innerWidth / window.innerHeight, 0.1, 100000);
             camera.position.set(0, 0, 100);               //摄像机位置
+            camera.rotation.set(1,1,1);
         }
 
         var scene;
@@ -165,6 +166,7 @@
                             }
                         }
                     });
+                    modelShow = gltf.scene;
                     scene.add(gltf.scene);
                 }, undefined, function (e) {
                     console.error(e);
@@ -181,6 +183,7 @@
                     }
                     mesh.castShadow = true;
                     mesh.receiveShadow = true;
+                    modelShow = mesh;
                     scene.add(mesh);
                 });
 
@@ -236,9 +239,11 @@
             requestAnimationFrame(animate);
             if (modelShow && initPosition) {
                 console.log(modelShow);
+                if(!modelShow.isMesh){
+                    console.log('ismesh');
                 modelShow.traverse(function (child) {
                     if (child.type == 'SkinnedMesh' || child.type == 'Mesh') {
-                        camera.position.set(child.geometry.boundingSphere.center.x, child.geometry.boundingSphere.center.y, child.geometry.boundingSphere.center.z + 2 * child.geometry.boundingSphere.radius);
+                        camera.position.set(child.geometry.boundingSphere.center.x, child.geometry.boundingSphere.center.y*2, child.geometry.boundingSphere.center.z + 2 * child.geometry.boundingSphere.radius);
                         resetDate.position = camera.position;
                         resetDate.rotation = camera.rotation;
                         console.log(resetDate);
@@ -246,6 +251,16 @@
                         return;
                     }
                 })
+                }else{
+                    console.log('notmesh');
+                            camera.position.set(modelShow.geometry.boundingSphere.center.x, modelShow.geometry.boundingSphere.center.y*2, modelShow.geometry.boundingSphere.center.z + 500 * modelShow.geometry.boundingSphere.radius);
+                            resetDate.position = camera.position;
+                            resetDate.rotation = camera.rotation;
+                            console.log(resetDate);
+                            initPosition = false;
+                            return;
+
+                }
 
             }
         }
