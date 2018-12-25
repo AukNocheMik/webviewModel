@@ -32,7 +32,6 @@
         function initCamera() {
             camera = new THREE.PerspectiveCamera(70, window.innerWidth / window.innerHeight, 0.1, 100000);
             camera.position.set(0, 0, 100);               //摄像机位置
-            camera.rotation.set(1,1,1);
         }
 
         var scene;
@@ -40,7 +39,6 @@
         function initScene() {
             scene = new THREE.Scene();
             scene.background = new THREE.Color(0xd7d7d7);
-            scene.fog = new THREE.Fog(0xd7d7d7, 200, 1000);
             var grid = new THREE.GridHelper(200, 40, 0x000000, 0x000000);
             grid.position.y = -20;
             grid.material.opacity = 0.2;
@@ -110,6 +108,7 @@
 
                     });
                     modelShow = object;
+                    modelShow.rotation.y = Math.PI / 4;
                     scene.add(object);
                     initPosition = true;
 
@@ -139,6 +138,7 @@
                         .setMaterials(materials)
                         .load(model_url, function (object) {
                             modelShow = object;
+                            modelShow.rotation.y = Math.PI / 4;
                             initPosition = true;
                             scene.add(object);
 
@@ -152,6 +152,7 @@
                 objectLoader.load(model_url, function (obj) {
                     console.log(model_url);
                     modelShow = obj;
+                    modelShow.rotation.y = Math.PI / 4;
                     initPosition = true;
                     scene.add(obj);
                 });
@@ -167,6 +168,7 @@
                         }
                     });
                     modelShow = gltf.scene;
+                    modelShow.rotation.y = Math.PI / 4;
                     scene.add(gltf.scene);
                 }, undefined, function (e) {
                     console.error(e);
@@ -184,6 +186,7 @@
                     mesh.castShadow = true;
                     mesh.receiveShadow = true;
                     modelShow = mesh;
+                    modelShow.rotation.y = Math.PI / 4;
                     scene.add(mesh);
                 });
 
@@ -253,12 +256,14 @@
                 })
                 }else{
                     console.log('notmesh');
+                    if(modelShow.geometry.boundingSphere.radius < 0.5){
                             camera.position.set(modelShow.geometry.boundingSphere.center.x, modelShow.geometry.boundingSphere.center.y*2, modelShow.geometry.boundingSphere.center.z + 500 * modelShow.geometry.boundingSphere.radius);
                             resetDate.position = camera.position;
                             resetDate.rotation = camera.rotation;
                             console.log(resetDate);
                             initPosition = false;
                             return;
+                    }
 
                 }
 
