@@ -5,7 +5,6 @@
         var bounding = {x: 0, y: 0, z: 0, radius: 0}
         var initPosition = false;
         var model_url     // 模型路径
-        var model_mrl_url; //当模型为obj 时，传入后缀为stl的材质文件路径
         var resetDate = {position: new THREE.Vector3(0, 0, 0), rotation: new THREE.Vector3(0, 0, 0),}
 
         function initRender() {                 //渲染方式
@@ -131,21 +130,15 @@
                 };
 
                 THREE.Loader.Handlers.add(/\.dds$/i, new THREE.DDSLoader());
+                var loader = new THREE.OBJLoader();
 
-                var loader = new THREE.MTLLoader().load(model_mrl_url, function (materials) {
-                    materials.preload();
-                    new THREE.OBJLoader()
-                        .setMaterials(materials)
-                        .load(model_url, function (object) {
-                            modelShow = object;
-                            modelShow.rotation.y = Math.PI / 4;
-                            initPosition = true;
-                            scene.add(object);
+                loader.load( model_url, function ( obj ) {
 
-                        }, onProgress, onError);
+                    modelShow = obj;
+                    console.log(obj);
+                    scene.add(modelShow);
 
-
-                });
+                }, onProgress, onError );
             } else if (model_url.indexOf('.json') > 0) {
                 // json loader
                 var objectLoader = new THREE.ObjectLoader();

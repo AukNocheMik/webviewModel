@@ -38,19 +38,13 @@
 <script src="libs/FBXLoader.js"></script>
 <script src="libs/DDSLoader.js"></script>
 <script type="text/javascript">
-    var model_url,model_url_stl;
+    var model_url;
     if(!window.localStorage){
         alert('web no support localStorage');
     }else{
-        model_url = 'models/fbx/Samba Dancing.fbx';
-        if(model_url.indexOf('.obj')>0){
-            model_url_stl = '';
-        }
+        model_url = 'models/stl/ascii/pr2_head_pan.stl';
         var storage = window.localStorage;
         storage["url"] = model_url;     // 填入模型路径；
-        storage["stl"] = model_url_stl; // 当传入的模型为obj 时候，需要配合mtl填入信息；
-
-
     }
 </script>
 </html>
