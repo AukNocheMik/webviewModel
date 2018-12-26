@@ -125,6 +125,7 @@
             if (model_url.indexOf('.fbx') > 0) {
 
                 var loader = new THREE.FBXLoader();    // 加载fbx 模型
+                try {
                 loader.load(model_url, function (object) {
 
                     object.mixer = new THREE.AnimationMixer(object);
@@ -148,11 +149,14 @@
                     initPosition = true;
 
                 },onProgress,onError);
+            } catch (e) {
+                initErrorModel();
+            }
             } else if (model_url.indexOf('.obj') > 0) {
 
                 THREE.Loader.Handlers.add(/\.dds$/i, new THREE.DDSLoader());
                 var loader = new THREE.OBJLoader();
-
+                try {
                 loader.load( model_url, function ( obj ) {
 
                     modelShow = obj;
@@ -160,9 +164,13 @@
                     scene.add(modelShow);
 
                 }, onProgress, onError );
+                } catch (e) {
+                    initErrorModel();
+                }
             } else if (model_url.indexOf('.json') > 0) {
                 // json loader
                 var objectLoader = new THREE.ObjectLoader();
+                try {
                 objectLoader.load(model_url, function (obj) {
                     console.log(model_url);
                     modelShow = obj;
@@ -170,8 +178,13 @@
                     initPosition = true;
                     scene.add(obj);
                 },onProgress,onError);
+                } catch (e) {
+                    initErrorModel();
+                }
             } else if (model_url.indexOf('.gltf') > 0) {
-                var loader = new THREE.GLTFLoader().load(model_url, function (gltf) {
+                var loader = new THREE.GLTFLoader();
+                try {
+                loader.load(model_url, function (gltf) {
                     gltf.scene.traverse(function (child) {
                         if (child.isMesh) {
                             if (mesh.geometry.boundingSphere < 1) {
@@ -185,6 +198,9 @@
                     modelShow.rotation.y = Math.PI / 4;
                     scene.add(gltf.scene);
                 }, onProgress, onError);
+            } catch (e) {
+                initErrorModel();
+            }
             } else if (model_url.indexOf('.stl') > 0) {
                     var loader = new THREE.STLLoader();
                 try {
