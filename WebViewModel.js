@@ -23,9 +23,32 @@
         function getModelUrl() {
             var storage = window.localStorage;
              model_url = storage["url"];     // 模型路径
-             model_mrl_url = storage["stl"]; //当模型为obj 时，传入后缀为stl的材质文件路径
         }
+        var fontModel;
+        function initErrorModel() {
 
+            var font;
+            var loader = new THREE.FontLoader();
+            loader.load("libs/gentilis_regular.typeface.json", function (res) {
+                font = new THREE.TextBufferGeometry("Failed to load", {
+                    font: res,
+                    size: 100,
+                    height: 20
+                });
+
+                font.computeBoundingBox(); // 运行以后设置font的boundingBox属性对象，如果不运行无法获得。
+                //font.computeVertexNormals();
+
+                var material = new THREE.MeshLambertMaterial({ color:'#ff4c4c',side: THREE.DoubleSide});
+                fontModel = new THREE.Mesh(font, material);
+                fontModel.scale.set(0.1,0.1,0.1);
+
+                //设置位置
+                fontModel.name = "error_model"
+                fontModel.position.x = -(font.boundingBox.max.x*0.1 - font.boundingBox.min.x*0.1)/2; //计算出整个模型的宽度的一半
+                scene.add(fontModel);
+            });
+        }
         var camera;
         
         function initCamera() {
@@ -34,11 +57,11 @@
         }
 
         var scene;
-
+        var grid
         function initScene() {
             scene = new THREE.Scene();
             scene.background = new THREE.Color(0xd7d7d7);
-            var grid = new THREE.GridHelper(200, 40, 0x000000, 0x000000);
+            grid= new THREE.GridHelper(200, 40, 0x000000, 0x000000);
             grid.position.y = -20;
             grid.material.opacity = 0.2;
             grid.material.transparent = true;
@@ -85,7 +108,20 @@
 
         function initLoader() {
             // ========   fbx loader
-            console.log(model_url.indexOf('.fbx'));
+            var onProgress = function (xhr) {
+
+                if (xhr.lengthComputable) {
+
+                    var percentComplete = xhr.loaded / xhr.total * 100;
+                    console.log(Math.round(percentComplete, 2) + '% downloaded');
+
+                }
+
+            };
+
+            var onError = function () {
+                initErrorModel();
+            };
             if (model_url.indexOf('.fbx') > 0) {
 
                 var loader = new THREE.FBXLoader();    // 加载fbx 模型
@@ -111,23 +147,8 @@
                     scene.add(object);
                     initPosition = true;
 
-                });
+                },onProgress,onError);
             } else if (model_url.indexOf('.obj') > 0) {
-
-                // ======  objloader======
-                var onProgress = function (xhr) {
-
-                    if (xhr.lengthComputable) {
-
-                        var percentComplete = xhr.loaded / xhr.total * 100;
-                        console.log(Math.round(percentComplete, 2) + '% downloaded');
-
-                    }
-
-                };
-
-                var onError = function () {
-                };
 
                 THREE.Loader.Handlers.add(/\.dds$/i, new THREE.DDSLoader());
                 var loader = new THREE.OBJLoader();
@@ -148,7 +169,7 @@
                     modelShow.rotation.y = Math.PI / 4;
                     initPosition = true;
                     scene.add(obj);
-                });
+                },onProgress,onError);
             } else if (model_url.indexOf('.gltf') > 0) {
                 var loader = new THREE.GLTFLoader().load(model_url, function (gltf) {
                     gltf.scene.traverse(function (child) {
@@ -163,27 +184,36 @@
                     modelShow = gltf.scene;
                     modelShow.rotation.y = Math.PI / 4;
                     scene.add(gltf.scene);
-                }, undefined, function (e) {
-                    console.error(e);
-                });
+                }, onProgress, onError);
             } else if (model_url.indexOf('.stl') > 0) {
-                var loader = new THREE.STLLoader();
-                loader.load(model_url, function (geometry) {
-                    var material = new THREE.MeshPhongMaterial({color: 0xff5533, specular: 0x111111, shininess: 200});
-                    var mesh = new THREE.Mesh(geometry, material);
-                    if (mesh.geometry.boundingSphere < 1) {
-                        mesh.scale.set(100, 100, 100);
-                    } else if (mesh.geometry.boundingSphere < 10) {
-                        mesh.scale.set(20, 20, 20);
-                    }
-                    mesh.castShadow = true;
-                    mesh.receiveShadow = true;
-                    modelShow = mesh;
-                    modelShow.rotation.y = Math.PI / 4;
-                    scene.add(mesh);
-                });
+                    var loader = new THREE.STLLoader();
+                try {
+                    loader.load(model_url, function (geometry) {
+                        var material = new THREE.MeshPhongMaterial({
+                            color: 0xff5533,
+                            specular: 0x111111,
+                            shininess: 200
+                        })
+                        console.log(geometry);
+                        var mesh = new THREE.Mesh(geometry, material);
+                        if (mesh.geometry.boundingSphere < 1) {
+                            mesh.scale.set(100, 100, 100);
+                        } else if (mesh.geometry.boundingSphere < 10) {
+                            mesh.scale.set(20, 20, 20);
+                        }
+                        mesh.castShadow = true;
+                        mesh.receiveShadow = true;
+                        modelShow = mesh;
+                        modelShow.rotation.y = Math.PI / 4;
+                        scene.add(mesh);
+                    },onProgress,onError);
+                } catch (e) {
+                    initErrorModel();
+                }
 
-            }
+            }else {
+                initErrorModel();
+                }
         }
 
         var controls;
@@ -233,6 +263,9 @@
 
             }
             requestAnimationFrame(animate);
+            if(fontModel) {
+                fontModel.lookAt(camera.position);
+            }
             if (modelShow && initPosition) {
                 console.log(modelShow);
                 if(!modelShow.isMesh){
@@ -265,6 +298,7 @@
 
 
         function draw() {       //初始化方法
+
             getModelUrl();
             initCamera();
             initRender();
@@ -273,5 +307,6 @@
             initLight();
             initControls();
             animate();
+
             window.onresize = onWindowResize;
         }
