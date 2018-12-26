@@ -1,8 +1,10 @@
+
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
-    <title>ModelViewer</title>
+    <title>Seer 3D Viewer</title>
     <link rel="stylesheet">
     <style>
         html,body {
@@ -16,35 +18,34 @@
         #container {
             width: 100%;
             height:100%
-
         }
-
     </style>
 </head>
+
 <body onload="draw()">
 <div id="container">
 
 </div>
 </body>
+<script src="WebViewModel.js"></script>
 <script src="libs/three.js"></script>
 <script src="libs/OrbitControls.js"></script>
 <script src="libs/OBJLoader.js"></script>
 <script src="libs/STLLoader.js"></script>
 <script src="libs/MTLLoader.js"></script>
 <script src="libs/inflate.min.js"></script>
-<script src="WebViewModel.js"></script>
 <script src="libs/GLTFLoader.js"></script>
-<!--<script src="js/WebViewModel.js"></script>-->
 <script src="libs/FBXLoader.js"></script>
 <script src="libs/DDSLoader.js"></script>
 <script type="text/javascript">
     var model_url;
-    if(!window.localStorage){
-        alert('web no support localStorage');
-    }else{
+    if (!window.localStorage) {
+        // alert('no support localStorage');
+    } else {
         model_url = 'models/stl/ascii/pr2_head_pan.stl';
         var storage = window.localStorage;
-        storage["url"] = model_url;     // 填入模型路径；
+        storage["url"] = model_url;
     }
 </script>
+
 </html>
