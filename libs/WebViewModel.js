@@ -150,7 +150,7 @@ function initLoader() {
 
                 });
                 modelShow.add( object);
-
+                object.rotation.y = Math.PI / 4;
                 var box = new THREE.Box3();
                 //通过传入的object3D对象来返回当前模型的最小大小，值可以使一个mesh也可以使group
                 box.expandByObject(modelShow);
@@ -158,7 +158,7 @@ function initLoader() {
                 object.position.y = - model_center.y;
                 cameraResetPosition = returnPosition_z((box.max.y - box.min.y),box.max.z);
                 camera.position.z = returnPosition_z((box.max.y - box.min.y),box.max.z);
-                initGrid(- model_center.y);
+                initGrid(-Math.abs(box.max.y - box.min.y)/2);
                 scene.add(modelShow);
                 initPosition = true;
 
@@ -174,6 +174,7 @@ function initLoader() {
             loader.load(model_url, function (obj) {
 
                 modelShow.add(obj);
+                obj.rotation.y = Math.PI / 4;
                 var box = new THREE.Box3();
                 //通过传入的object3D对象来返回当前模型的最小大小，值可以使一个mesh也可以使group
                 box.expandByObject(modelShow);
@@ -181,7 +182,7 @@ function initLoader() {
                 obj.position.y = - model_center.y;
                 camera.position.z = returnPosition_z((box.max.y - box.min.y),box.max.z);
                 cameraResetPosition = returnPosition_z((box.max.y - box.min.y),box.max.z);
-                initGrid(- model_center.y);
+                initGrid(-Math.abs(box.max.y - box.min.y)/2);
                 scene.add(modelShow);
                 initPosition = true;
 
@@ -197,6 +198,7 @@ function initLoader() {
             objectLoader.load(model_url, function (obj) {
                 console.log(model_url);
                 modelShow.add( obj);
+                obj.rotation.y = Math.PI / 4;
                 var box = new THREE.Box3();
                 //通过传入的object3D对象来返回当前模型的最小大小，值可以使一个mesh也可以使group
                 box.expandByObject(modelShow);
@@ -217,6 +219,7 @@ function initLoader() {
             loader.load(model_url, function (gltf) {
 
                 modelShow = gltf.scene;
+                gltf.scene.rotation.y = Math.PI / 4;
                 cameraResetPosition = 1;
                 gltf.scene.traverse(function (child) {
                     if (child.isMesh) {
@@ -251,6 +254,7 @@ function initLoader() {
                 var mesh = new THREE.Mesh(geometry, material);
                 mesh.castShadow = true;
                 mesh.receiveShadow = true;
+                mesh.rotation.y = Math.PI / 4;
                 modelShow.add( mesh);
                 var box = new THREE.Box3();
                 //通过传入的object3D对象来返回当前模型的最小大小，值可以使一个mesh也可以使group
@@ -261,7 +265,7 @@ function initLoader() {
                 cameraResetPosition = returnPosition_z((box.max.y - box.min.y),box.max.z);
                 console.log(model_center.y);
                 console.log(camera.position);
-                initGrid(- model_center.y);
+                initGrid(-Math.abs(box.max.y - box.min.y)/2);
                 scene.add(mesh);
                 initPosition = false;
             }, onProgress, onError);
