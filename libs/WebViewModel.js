@@ -34,20 +34,21 @@ function initErrorModel() {
     loader.load("libs/gentilis_regular.typeface.json", function (res) {
         font = new THREE.TextBufferGeometry("Failed to load", {
             font: res,
-            size: 100,
-            height: 20
+            size: 10,
+            height: 1
         });
 
         font.computeBoundingBox(); // 运行以后设置font的boundingBox属性对象，如果不运行无法获得。
         //font.computeVertexNormals();
+        font.center()
 
         var material = new THREE.MeshLambertMaterial({color: '#ff4c4c', side: THREE.DoubleSide});
         fontModel = new THREE.Mesh(font, material);
-        fontModel.scale.set(0.1, 0.1, 0.1);
-
+        fontModel.position.set(0,0,-45);
         //设置位置
         fontModel.name = "error_model"
-        fontModel.position.x = -(font.boundingBox.max.x * 0.1 - font.boundingBox.min.x * 0.1) / 2; //计算出整个模型的宽度的一半
+       // fontModel.position.x = -(font.boundingBox.max.x- font.boundingBox.min.x ) / 2; //计算出整个模型的宽度的一半
+        console.log(fontModel.position);
         scene.add(fontModel);
     });
 }
@@ -133,6 +134,9 @@ function initLoader() {
             loader.load(model_url, function (object) {
 
                 object.mixer = new THREE.AnimationMixer(object);
+               if(object.mixer.time == 0) {
+                   throw 'error';
+            }
                 mixers.push(object.mixer);
 
                 var action = object.mixer.clipAction(object.animations[0]);
@@ -148,6 +152,7 @@ function initLoader() {
 
                 });
                 modelShow.add( object);
+
                 var box = new THREE.Box3();
                 //通过传入的object3D对象来返回当前模型的最小大小，值可以使一个mesh也可以使group
                 box.expandByObject(modelShow);
@@ -311,7 +316,6 @@ function animate() {
     controls.update();
 
     if (mixers.length > 0) {
-
         for (var i = 0; i < mixers.length; i++) {
 
             mixers[i].update(clock.getDelta());
@@ -320,11 +324,7 @@ function animate() {
 
     }
     requestAnimationFrame(animate);
-    if (fontModel) {
-        fontModel.lookAt(camera.position);
-    }
-    console.log(modelShow);
-    if (modelShow.children.length > 0 && !initPosition) {
+    if (modelShow && modelShow.children.length > 0 && !initPosition) {
         console.log(camera.rotation);
         camera.position.set(0, 0, cameraResetPosition);
         initPosition = true;
