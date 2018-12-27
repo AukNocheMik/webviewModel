@@ -134,9 +134,7 @@ function initLoader() {
             loader.load(model_url, function (object) {
 
                 object.mixer = new THREE.AnimationMixer(object);
-               if(object.mixer.time == 0) {
-                   throw 'error';
-            }
+
                 mixers.push(object.mixer);
 
                 var action = object.mixer.clipAction(object.animations[0]);
@@ -208,7 +206,7 @@ function initLoader() {
                 cameraResetPosition = returnPosition_z((box.max.y - box.min.y),box.max.z);
                 initGrid(- model_center.y);
                 initPosition = true;
-                scene.add(obj);
+                scene.add(modelShow);
             }, onProgress, onError);
         } catch (e) {
             initErrorModel();
