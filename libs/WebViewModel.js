@@ -273,7 +273,28 @@ function initLoader() {
             initErrorModel();
         }
 
-    } else {
+    } else if(model_url.indexOf('.3ds') > 0){
+        var loader = new THREE.TDSLoader( );
+        try {
+            loader.load(model_url, function (object) {
+                object.rotation.y = Math.PI / 4;
+                modelShow.add(object);
+                var box = new THREE.Box3();
+                //通过传入的object3D对象来返回当前模型的最小大小，值可以使一个mesh也可以使group
+                box.expandByObject(modelShow);
+                model_center = box.getCenter();
+                object.position.y = -model_center.y;
+                camera.position.z = returnPosition_z((box.max.y - box.min.y), box.max.z);
+                cameraResetPosition = returnPosition_z((box.max.y - box.min.y), box.max.z);
+                initGrid(-Math.abs(box.max.y - box.min.y) / 2);
+                scene.add(object);
+                initPosition = false;
+            }, onProgress, onError);
+        }catch (e) {
+            initErrorModel();
+        }
+    }
+    else{
         initErrorModel();
     }
 }
