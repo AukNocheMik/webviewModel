@@ -30,21 +30,13 @@
 
 <script src="libs/three.js"></script>
 <script src="libs/OrbitControls.js"></script>
-<script src="libs/OBJLoader.js"></script>
-<script src="libs/STLLoader.js"></script>
-<script src="libs/MTLLoader.js"></script>
-<script src="libs/inflate.min.js"></script>
-<script src="libs/GLTFLoader.js"></script>
-<script src="libs/FBXLoader.js"></script>
-<script src="libs/DDSLoader.js"></script>
-<script src="libs/TDSLoader.js"></script>
 <script src="libs/WebViewModel.js"></script>
 <script type="text/javascript">
     var model_url;
     if (!window.localStorage) {
         // alert('no support localStorage');
     } else {
-        model_url = 'models/gltf/DamagedHelmet/glTF/DamagedHelmet.gltf';
+        model_url = 'models/stl/ascii/pr2_head_pan.stl';
         var storage = window.localStorage;
         storage["url"] = model_url;
     }
