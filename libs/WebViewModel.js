@@ -1,3 +1,4 @@
+/// 插件开源,如果商用请与我联系 1195902645  斯蒂芬King;
 var renderer, light, mixers = [];
 var modelShow = new THREE.Group();
 var initPosition = true;
