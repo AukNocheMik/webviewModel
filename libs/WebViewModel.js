@@ -66,9 +66,11 @@ var scene;
 var grid
 
 function initScene() {
+    var urls = [ 'posx.jpg', 'negx.jpg', 'posy.jpg', 'negy.jpg', 'posz.jpg', 'negz.jpg' ];
+    var loader = new THREE.CubeTextureLoader().setPath( 'textures/cube/Bridge2/' );
+    var background = loader.load( urls );
     scene = new THREE.Scene();
-    scene.background = new THREE.Color(0xd7d7d7);
-
+    scene.background = background;
 
 }
 
@@ -183,6 +185,7 @@ function initLoader() {
                     loader.load(model_url, function (obj) {
 
                         modelShow.add(obj);
+                        console.log(obj);
                         var box = new THREE.Box3();
                         //通过传入的object3D对象来返回当前模型的最小大小，值可以使一个mesh也可以使group
                         box.expandByObject(modelShow);
@@ -210,7 +213,6 @@ function initLoader() {
         var objectLoader = new THREE.ObjectLoader();
         try {
             objectLoader.load(model_url, function (obj) {
-                console.log(model_url);
                 modelShow.add( obj);
                 // obj.rotation.y = Math.PI / 4;
                 var box = new THREE.Box3();
@@ -235,11 +237,15 @@ function initLoader() {
             var loader = new THREE.GLTFLoader();
             try {
                 loader.load(model_url, function (gltf) {
-
+                    console.log(gltf);
                     modelShow = gltf.scene;
                     cameraResetPosition = 1;
                     gltf.scene.traverse(function (child) {
                         if (child.isMesh) {
+
+                                child.material.opacity = 0.9;
+                                child.material.transparent  = true;
+
                             if (child.geometry.boundingSphere < 1) {
                                 camera.position.z = returnPosition_z(2,1);
                                 cameraResetPosition = returnPosition_z(2,1);
