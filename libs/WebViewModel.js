@@ -131,7 +131,7 @@ function initLoader() {
     var onError = function () {
         initErrorModel();
     };
-    if (model_url.indexOf('.fbx') > 0) {
+    if (model_url.indexOf('.fbx') > 0 || model_url.indexOf('.FBX') > 0) {
         //FBXLoader
         loadJs("libs/FBXLoader.js",function(){
             loadJs("libs/inflate.min.js",function(){
