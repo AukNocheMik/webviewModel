@@ -7,6 +7,7 @@ var clock = new THREE.Clock();
 var model_center;       // 模型中心
 var cameraResetPosition = 0;
 var cameraResetPositionY = 0;
+var modelIndexUrl='';
 
 function initRender() {                 //渲染方式
     renderer = new THREE.WebGLRenderer({
@@ -25,6 +26,7 @@ function initRender() {                 //渲染方式
 function getModelUrl() {
     var storage = window.localStorage;
     model_url = storage["url"];     // 模型路径
+    modelIndexUrl = model_url.toLowerCase();
 }
 
 var fontModel;
@@ -131,7 +133,7 @@ function initLoader() {
     var onError = function () {
         initErrorModel();
     };
-    if (model_url.indexOf('.fbx') > 0 || model_url.indexOf('.FBX') > 0) {
+    if (modelIndexUrl.indexOf('.fbx') > 0) {
         //FBXLoader
         loadJs("libs/FBXLoader.js",function(){
             loadJs("libs/inflate.min.js",function(){
@@ -176,7 +178,7 @@ function initLoader() {
                 }
             });
         });
-    } else if (model_url.indexOf('.obj') > 0) {
+    } else if (modelIndexUrl.indexOf('.obj') > 0) {
         loadJs("libs/DDSLoader.js",function(){
             loadJs("libs/OBJLoader.js",function () {
                 THREE.Loader.Handlers.add(/\.dds$/i, new THREE.DDSLoader());
@@ -207,7 +209,7 @@ function initLoader() {
                 }
             })
         });
-    } else if (model_url.indexOf('.json') > 0) {
+    } else if (modelIndexUrl.indexOf('.json') > 0) {
         // json loader
 
         var objectLoader = new THREE.ObjectLoader();
@@ -232,7 +234,7 @@ function initLoader() {
         } catch (e) {
             initErrorModel();
         }
-    } else if (model_url.indexOf('.gltf') > 0) {
+    } else if (modelIndexUrl.indexOf('.gltf') > 0) {
         loadJs("libs/GLTFLoader.js",function () {
             var loader = new THREE.GLTFLoader();
             try {
@@ -266,7 +268,7 @@ function initLoader() {
             }
         });
 
-    } else if (model_url.indexOf('.stl') > 0) {
+    } else if (modelIndexUrl.indexOf('.stl') > 0) {
         loadJs("libs/STLLoader.js",function () {
             var loader = new THREE.STLLoader();
             try {
@@ -294,6 +296,12 @@ function initLoader() {
                     console.log(model_center.y);
                     console.log(camera.position);
                     initGrid(-Math.abs(box.max.y - box.min.y)/2);
+
+
+
+
+
+
                     scene.add(modelShow);
                     initPosition = false;
                 }, onProgress, onError);
@@ -303,7 +311,7 @@ function initLoader() {
 
         });
 
-    } else if(model_url.indexOf('.3ds') > 0){
+    } else if(modelIndexUrl.indexOf('.3ds') > 0){
         loadJs("libs/TDSLoader.js",function () {
             var loader = new THREE.TDSLoader( );
             try {
