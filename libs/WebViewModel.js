@@ -68,11 +68,8 @@ var scene;
 var grid
 
 function initScene() {
-    var urls = [ 'posx.jpg', 'negx.jpg', 'posy.jpg', 'negy.jpg', 'posz.jpg', 'negz.jpg' ];
-    var loader = new THREE.CubeTextureLoader().setPath( 'textures/cube/Bridge2/' );
-    var background = loader.load( urls );
+
     scene = new THREE.Scene();
-    scene.background = background;
 
 }
 
